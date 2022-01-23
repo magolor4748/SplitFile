@@ -4,16 +4,25 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 
 namespace SplitFile
 {
-    public class Program
+    public class SplitFilePrompt
     {
         static void Main(string[] args)
         {
             String[] opts = { "Factorial", "Split" };
             String[] yesno = { "Yes", "No" };
 
+            Console.WriteLine("Benchmark?");
+            String bench = Validate(yesno);
+            if (bench.ToLower().Equals("yes"))
+            {
+                BenchmarkRunner.Run<FactorialAndSplit>();
+                return;
+            }
             String choice = Validate(opts);
 
             Console.WriteLine("Recursively?");
@@ -21,15 +30,15 @@ namespace SplitFile
 
             if (choice.ToLower().Equals("factorial"))
             {
-                if(recursive.ToLower().Equals("yes"))
+                if (recursive.ToLower().Equals("yes"))
                 {
                     Console.WriteLine("What number?");
-                    Console.WriteLine(Factorial(ValidateInt()));
+                    Console.WriteLine(FactorialAndSplit.Factorial(ValidateInt()));
                 }
                 else
                 {
                     Console.WriteLine("What number?");
-                    Console.WriteLine(FactorialLoop(ValidateInt()));
+                    Console.WriteLine(FactorialAndSplit.FactorialLoop(ValidateInt()));
                 }
             }
             else
@@ -40,7 +49,7 @@ namespace SplitFile
                     bool def = Validate(yesno).ToLower().Equals("yes");
                     if (def)
                     {
-                        SplitLoop("C:\\Users\\Magolor\\Documents\\Input");
+                        FactorialAndSplit.SplitLoop("C:\\Users\\Magolor\\Documents\\Input");
                     }
                     else
                     {
@@ -49,7 +58,7 @@ namespace SplitFile
                         Console.WriteLine("Input a file path.");
                         String file = Console.ReadLine();
                         Console.WriteLine("Choose a limit.");
-                        Split(path, file, ValidateInt());
+                        FactorialAndSplit.Split(path, file, ValidateInt());
                     }
                 }
                 else
@@ -58,7 +67,7 @@ namespace SplitFile
                     bool def = Validate(yesno).ToLower().Equals("yes");
                     if (def)
                     {
-                        SplitLoop("C:\\Users\\Magolor\\Documents\\Input");
+                        FactorialAndSplit.SplitLoop("C:\\Users\\Magolor\\Documents\\Input");
                     }
                     else
                     {
@@ -67,7 +76,7 @@ namespace SplitFile
                         Console.WriteLine("Input a file path.");
                         String file = Console.ReadLine();
                         Console.WriteLine("Choose a limit.");
-                        SplitLoop(path, file, ValidateInt());
+                        FactorialAndSplit.SplitLoop(path, file, ValidateInt());
                     }
                 }
             }
@@ -109,6 +118,16 @@ namespace SplitFile
                 }
             }
         }
+    }
+
+    [MemoryDiagnoser]
+    public class FactorialAndSplit
+    {
+        [Benchmark]
+        public int TestFactorialRecursive()
+        {
+            return Factorial(50);
+        }
 
         public static int Factorial(int num)
         {
@@ -117,6 +136,12 @@ namespace SplitFile
                 return 1;
             }
             return num * Factorial(num - 1);
+        }
+
+        [Benchmark]
+        public int TestFactorialIterative()
+        {
+            return FactorialLoop(50);
         }
 
         public static int FactorialLoop(int num)
@@ -129,26 +154,28 @@ namespace SplitFile
             return result;
         }
 
+        //[Benchmark]
         public static void Split(String path, string fileName="input", int limit=2000, int count=0)
         {
-            byte[] input = File.ReadAllBytes(path + "\\" + fileName + ".txt");
+            byte[] input = File.ReadAllBytes(Path.Combine(path, fileName + ".txt"));
             int length = input.Length;
 
             if (length - limit * count < limit)
             {
-                File.WriteAllBytes(String.Format(path + "\\" + fileName + "{0,3:000}.txt", count + 1), input.Skip(limit * count).ToArray());
+                File.WriteAllBytes(Path.Combine(path, fileName + String.Format("{0,3:000}.txt", count + 1)), input.Skip(limit * count).ToArray());
             }
             else
             {
-                File.WriteAllBytes(String.Format(path + "\\" + fileName + "{0,3:000}.txt", count + 1), input.Skip(limit * count).Take(limit).ToArray());
+                File.WriteAllBytes(Path.Combine(path, fileName + String.Format("{0,3:000}.txt", count + 1)), input.Skip(limit * count).Take(limit).ToArray());
                 Split(path, fileName, limit, count+1);
             }
             return;
         }
 
+        //[Benchmark]
         public static void SplitLoop(String path, String fileName="input", int limit=2000)
         {
-            byte[] input = File.ReadAllBytes(path + "\\" + fileName + ".txt");
+            byte[] input = File.ReadAllBytes(Path.Combine(path, fileName + ".txt"));
             int length = input.Length;
 
             int loops = (int)Math.Ceiling(length / (double)limit);
@@ -156,11 +183,11 @@ namespace SplitFile
             {
                 if (i < loops - 1)
                 {
-                    File.WriteAllBytes(String.Format(path + "\\" + fileName + "{0,3:000}.txt", i + 1), input.Skip(limit * i).Take(limit).ToArray());
+                    File.WriteAllBytes(Path.Combine(path, fileName + String.Format("{0,3:000}.txt", i + 1)), input.Skip(limit * i).Take(limit).ToArray());
                 }
                 else
                 {
-                    File.WriteAllBytes(String.Format(path + "\\" + fileName + "{0,3:000}.txt", i + 1), input.Skip(limit * i).ToArray());
+                    File.WriteAllBytes(Path.Combine(path, fileName + String.Format("{0,3:000}.txt", i + 1)), input.Skip(limit * i).ToArray());
                 }
             }
         }
