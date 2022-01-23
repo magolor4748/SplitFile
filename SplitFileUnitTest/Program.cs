@@ -21,14 +21,14 @@ namespace SplitFileUnitTest
                 File.Delete(splitted);
             }
             Split(Directory.GetCurrentDirectory());
-            string f = File.OpenText(Path.Combine(Directory.GetCurrentDirectory(), "input003.txt")).ReadToEnd();
+            string f = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "input003.txt"));
             Xunit.Assert.Equal(",", f);
             Xunit.Assert.Equal(1, f.Length);
             foreach (string splitted in toDelete)
             {
                 File.Delete(splitted);
             }
-            f = File.OpenText(Path.Combine(Directory.GetCurrentDirectory(), "input003.txt")).ReadToEnd();
+            f = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "input003.txt"));
             SplitLoop(Directory.GetCurrentDirectory());
             Xunit.Assert.Equal(",", f);
             Xunit.Assert.Equal(1, f.Length);
