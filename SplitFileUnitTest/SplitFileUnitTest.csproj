@@ -68,6 +68,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SplitFile\SplitFile.csproj">
+      <Project>{0b3ec3a9-26c7-4ae0-b55f-3a6fc2cedccd}</Project>
+      <Name>SplitFile</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

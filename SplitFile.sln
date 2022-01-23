@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitFile", "SplitFile\SplitFile.csproj", "{0B3EC3A9-26C7-4AE0-B55F-3A6FC2CEDCCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplitFileUnitTest", "SplitFileUnitTest\SplitFileUnitTest.csproj", "{180FE9B1-42B7-4B20-AED0-E5FA260DEBA0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0B3EC3A9-26C7-4AE0-B55F-3A6FC2CEDCCD} = {0B3EC3A9-26C7-4AE0-B55F-3A6FC2CEDCCD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
