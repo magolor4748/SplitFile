@@ -33,12 +33,12 @@ namespace SplitFile
                 if (recursive.ToLower().Equals("yes"))
                 {
                     Console.WriteLine("What number?");
-                    Console.WriteLine(FactorialAndSplit.Factorial(ValidateInt()));
+                    Console.WriteLine(FactorialAndSplit.Factorial((uint)ValidateInt()));
                 }
                 else
                 {
                     Console.WriteLine("What number?");
-                    Console.WriteLine(FactorialAndSplit.FactorialLoop(ValidateInt()));
+                    Console.WriteLine(FactorialAndSplit.FactorialLoop((uint)ValidateInt()));
                 }
             }
             else
@@ -123,13 +123,13 @@ namespace SplitFile
     [MemoryDiagnoser]
     public class FactorialAndSplit
     {
-        [Benchmark]
-        public int TestFactorialRecursive()
+        //[Benchmark]
+        public ulong TestFactorialRecursive()
         {
-            return Factorial(50);
+            return Factorial(20);
         }
 
-        public static int Factorial(int num)
+        public static ulong Factorial(uint num)
         {
             if (num <= 1)
             {
@@ -138,23 +138,28 @@ namespace SplitFile
             return num * Factorial(num - 1);
         }
 
-        [Benchmark]
-        public int TestFactorialIterative()
+        //[Benchmark]
+        public ulong TestFactorialIterative()
         {
-            return FactorialLoop(50);
+            return FactorialLoop(20);
         }
 
-        public static int FactorialLoop(int num)
+        public static ulong FactorialLoop(uint num)
         {
-            int result = 1;
-            for(int i = num; i > 0; i--)
+            ulong result = 1;
+            for(ulong i = num; i > 0; i--)
             {
                 result *= i;
             }
             return result;
         }
 
-        //[Benchmark]
+        [Benchmark]
+        public void TestSplitRecursive()
+        {
+            Split("C:\\Users\\Magolor\\source\\repos\\SplitFile\\Test");
+            return;
+        }
         public static void Split(String path, string fileName="input", int limit=2000, int count=0)
         {
             byte[] input = File.ReadAllBytes(Path.Combine(path, fileName + ".txt"));
@@ -172,7 +177,12 @@ namespace SplitFile
             return;
         }
 
-        //[Benchmark]
+        [Benchmark]
+        public void TestSplitIterative()
+        {
+            SplitLoop("C:\\Users\\Magolor\\source\\repos\\SplitFile\\Test");
+            return;
+        }
         public static void SplitLoop(String path, String fileName="input", int limit=2000)
         {
             byte[] input = File.ReadAllBytes(Path.Combine(path, fileName + ".txt"));
